@@ -5,17 +5,15 @@ import '../services/review_service.dart';
 enum StatusState { sending, success, failure }
 
 class StatusScreen extends StatefulWidget {
-  final String employeeName;
-  final String mobile;
-  final String mood;
+  final String review;
+  final String sentiment;
   final String unitId;
   final VoidCallback onSuccess;
 
   const StatusScreen({
     super.key,
-    required this.employeeName,
-    required this.mobile,
-    required this.mood,
+    required this.review,
+    required this.sentiment,
     required this.unitId,
     required this.onSuccess,
   });
@@ -42,9 +40,8 @@ class _StatusScreenState extends State<StatusScreen> {
 
     try {
       final success = await ReviewService.submitReview(
-        name: widget.employeeName,
-        mobile: widget.mobile,
-        review: widget.mood,
+        review: widget.review,
+        sentiment: widget.sentiment,
         unitId: widget.unitId,
       );
 

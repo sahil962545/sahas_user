@@ -12,8 +12,7 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _mobileController = TextEditingController();
+  final _reviewController = TextEditingController();
   String? _selectedMood;
 
   List<Map<String, dynamic>> _units = [];
@@ -53,15 +52,13 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _mobileController.dispose();
+    _reviewController.dispose();
     super.dispose();
   }
 
   void _clearForm() {
     setState(() {
-      _nameController.clear();
-      _mobileController.clear();
+      _reviewController.clear();
       _selectedMood = null;
       _selectedUnitId = null;
     });
@@ -76,9 +73,8 @@ class HomeScreenState extends State<HomeScreen> {
         context,
         MaterialPageRoute(
           builder: (context) => StatusScreen(
-            employeeName: _nameController.text.trim(),
-            mobile: _mobileController.text.trim(),
-            mood: _selectedMood!,
+            review: _reviewController.text.trim(),
+            sentiment: _selectedMood!,
             unitId: _selectedUnitId!,
             onSuccess: () {
               _clearForm();
@@ -135,7 +131,7 @@ class HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                value,
+                label.split(' ').first,
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -208,114 +204,6 @@ class HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         const SizedBox(height: 24),
-
-                        // Employee Name Input
-                        TextFormField(
-                          controller: _nameController,
-                          style: const TextStyle(color: Color(0xFF1E293B)),
-                          decoration: InputDecoration(
-                            labelText: 'Employee Name',
-                            labelStyle: const TextStyle(
-                              color: Color(0xFF64748B),
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.person_outline_rounded,
-                              color: Color(0xFF6366F1),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFCBD5E1),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Color(0xFF6366F1),
-                                width: 1.5,
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFEF4444),
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFEF4444),
-                                width: 1.5,
-                              ),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Employee Name is required';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Mobile Number Input
-                        TextFormField(
-                          controller: _mobileController,
-                          keyboardType: TextInputType.phone,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(10),
-                          ],
-                          style: const TextStyle(color: Color(0xFF1E293B)),
-                          decoration: InputDecoration(
-                            labelText: 'Mobile Number',
-                            labelStyle: const TextStyle(
-                              color: Color(0xFF64748B),
-                            ),
-                            prefixIcon: const Icon(
-                              Icons.phone_android_rounded,
-                              color: Color(0xFF6366F1),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFCBD5E1),
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Color(0xFF6366F1),
-                                width: 1.5,
-                              ),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFEF4444),
-                              ),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Color(0xFFEF4444),
-                                width: 1.5,
-                              ),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Mobile Number is required';
-                            }
-                            final cleanValue = value.trim();
-                            final regExp = RegExp(r'^[0-9]{10}$');
-                            if (!regExp.hasMatch(cleanValue)) {
-                              return 'Enter a valid 10-digit mobile number';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
 
                         // Unit Dropdown Input
                         if (_isLoadingUnits)
@@ -434,7 +322,7 @@ class HomeScreenState extends State<HomeScreen> {
                                 Row(
                                   children: [
                                     _buildMoodCard(
-                                      'Happy',
+                                      'happy',
                                       'Happy 😊',
                                       const Color(0xFF10B981),
                                       const Color(0xFFECFDF5),
@@ -442,7 +330,7 @@ class HomeScreenState extends State<HomeScreen> {
                                     ),
                                     const SizedBox(width: 8),
                                     _buildMoodCard(
-                                      'Unhappy',
+                                      'unhappy',
                                       'Unhappy 🙁',
                                       const Color(0xFFF59E0B),
                                       const Color(0xFFFEF3C7),
@@ -450,7 +338,7 @@ class HomeScreenState extends State<HomeScreen> {
                                     ),
                                     const SizedBox(width: 8),
                                     _buildMoodCard(
-                                      'Emergency',
+                                      'emergency',
                                       'Emergency 🚨',
                                       const Color(0xFFEF4444),
                                       const Color(0xFFFEF2F2),
@@ -470,6 +358,57 @@ class HomeScreenState extends State<HomeScreen> {
                                 ],
                               ],
                             );
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        // Review Text Input
+                        TextFormField(
+                          controller: _reviewController,
+                          maxLines: 3,
+                          style: const TextStyle(color: Color(0xFF1E293B)),
+                          decoration: InputDecoration(
+                            labelText: 'Write Review',
+                            hintText: 'Enter your review or comments here...',
+                            labelStyle: const TextStyle(
+                              color: Color(0xFF64748B),
+                            ),
+                            prefixIcon: const Icon(
+                              Icons.rate_review_outlined,
+                              color: Color(0xFF6366F1),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFCBD5E1),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(
+                                color: Color(0xFF6366F1),
+                                width: 1.5,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFEF4444),
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: const BorderSide(
+                                color: Color(0xFFEF4444),
+                                width: 1.5,
+                              ),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Review is required';
+                            }
+                            return null;
                           },
                         ),
                         const SizedBox(height: 36),

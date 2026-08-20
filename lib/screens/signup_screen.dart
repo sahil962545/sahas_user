@@ -75,7 +75,7 @@ class _SignupScreenState extends State<SignupScreen> {
       final mobile = _mobileController.text.trim();
       final password = _passwordController.text;
 
-      const url = 'https://uapi.ureka.dev/review//v1/user';
+      const url = 'https://uapi.ureka.dev/review/v1/user';
       final bodyData = {
         'name': name,
         'email': emailLower,

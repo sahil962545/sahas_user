@@ -1,12 +1,19 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'storage_service.dart';
 
 class ReviewService {
   /// Fetches units from the REST API.
   static Future<List<Map<String, dynamic>>> fetchUnits() async {
-    const url = 'https://uapi.ureka.dev/review//v1/unit';
+    const url = 'https://uapi.ureka.dev/review/v1/unit';
+    final token = await StorageService.getUserToken();
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
+    };
+
     print('[API GET] Requesting: $url');
-    final response = await http.get(Uri.parse(url));
+    final response = await http.get(Uri.parse(url), headers: headers);
     print('[API GET] Response code: ${response.statusCode}');
     print('[API GET] Response body: ${response.body}');
 
@@ -19,20 +26,22 @@ class ReviewService {
     throw Exception('Failed to load units');
   }
 
-  /// Submits the review/status to the REST API.
+  /// Submits the review to the REST API.
   static Future<bool> submitReview({
-    required String name,
-    required String mobile,
     required String review,
+    required String sentiment,
     required String unitId,
   }) async {
-    final headers = {'Content-Type': 'application/json'};
+    final token = await StorageService.getUserToken();
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
+    };
 
-    const url = 'https://uapi.ureka.dev/review//v1/review';
+    const url = 'https://uapi.ureka.dev/review/v1/review';
     final bodyData = {
-      'name': name,
-      'mobile': mobile,
       'review': review,
+      'sentiment': sentiment.toLowerCase().trim(),
       'unit': unitId,
     };
 

@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
       final emailLower = _emailController.text.trim().toLowerCase();
       final password = _passwordController.text;
 
-      const url = 'https://uapi.ureka.dev/review//v1/user/login';
+      const url = 'https://uapi.ureka.dev/review/v1/user/login';
       final bodyData = {'email': emailLower, 'password': password};
 
       try {
